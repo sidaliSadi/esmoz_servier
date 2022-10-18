@@ -18,6 +18,5 @@ def load_original_data(
 
 #lower case
 def lower_case(df, col):
-    return df.withColumn(col+'_', F.lower(F.col(col)))\
-    .drop(col)
+    return df.withColumn(col, F.lower(F.col(col)))
 
