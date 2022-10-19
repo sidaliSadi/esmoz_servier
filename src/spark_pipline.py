@@ -1,14 +1,8 @@
-from email import header
-from importlib.resources import path
-from operator import index
 
-from pickle import TRUE
-from tkinter.tix import Tree
 import pyspark.sql.functions as F
 from common import init_spark
-from pathlib import Path
-import re
-from functools import reduce
+import csv, json
+
 
 spark = init_spark("discover", driver_memory=4)
 
@@ -25,7 +19,6 @@ def read_files(dict_pattern):
         for key, pattern in dict_pattern.items()
     }       
 
-#lower case
 def process_df(df_dict):
     #df_drug lower case drug column
     df_dict['drugs'] = df_dict['drugs'].withColumn('drug', F.lower(F.col('drug')))
@@ -53,7 +46,16 @@ def process_df(df_dict):
         .toPandas().to_csv('result/final_result.csv', header=True, index=False)
 
 
-    
-
-
+def save_as_tree(root, file_path):
+        with open(f'{file_path}', 'r') as f:
+            reader = csv.reader(f)
+            for rid, row in enumerate(reader):
+                if rid == 0:
+                    continue
+                drug, title, date,journal, type = row
+                root.child(drug,'drug', cdate=None).child(title, type, date)
+                root.child(drug, 'drug', cdate=None).child(journal, 'journal', date)
+                # root.child(drug).child(journal_pubmed)
+        with open('result/final_result.json', 'w') as f:
+            json.dump(root.as_dict(), f)
 
