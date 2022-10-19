@@ -1,6 +1,6 @@
 
 import pyspark.sql.functions as F
-from common import init_spark
+from .common import init_spark
 import csv, json
 
 
