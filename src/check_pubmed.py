@@ -1,3 +1,4 @@
+from unittest import result
 import pyspark.sql.functions as F
 from common import init_spark
 import os
@@ -44,9 +45,9 @@ def pubMedPipline(
     pubmed_df = rename_pubmed_columns(pubmed_df)
 
     condition = pubmed_df.title_pubmed.contains(drugs_df.drug)
-    join(drugs_df, pubmed_df, condition).toPandas().to_json('result/pubmed_drugs.json', orient='records', force_ascii=False, lines=True)
+    join(drugs_df, pubmed_df, condition).toPandas().to_csv('result/res.csv', sep=',', header=True, index=False)
 
-drugs_path = os.path.join('/home/sadi/Bureau/esmoz_servier/esmoz_servier/data', 'drugs.csv')
-pubmed_path = os.path.join('/home/sadi/Bureau/esmoz_servier/esmoz_servier/data', 'pubmed.csv')
 
-pubMedPipline(drugs_path, pubmed_path, 'drug', 'title')
+
+
+
