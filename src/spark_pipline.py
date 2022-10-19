@@ -1,6 +1,9 @@
+from email import header
 from importlib.resources import path
+from operator import index
 
 from pickle import TRUE
+from tkinter.tix import Tree
 import pyspark.sql.functions as F
 from common import init_spark
 from pathlib import Path
@@ -44,8 +47,13 @@ def process_df(df_dict):
     #drop column id of pubmed_clinical df
     pubmed_clinical_df = pubmed_clinical_df.drop('id')
 
-    #join pubmed_clinical_df with drugs df
-    return df_dict['drugs'].select('drug').join(pubmed_clinical_df, pubmed_clinical_df.title.contains(df_dict['drugs'].drug), 'inner').distinct()
+    #join pubmed_clinical_df with drugs df and save result as csv file
+    print('saviiiing file')
+    df_dict['drugs'].select('drug').join(pubmed_clinical_df, pubmed_clinical_df.title.contains(df_dict['drugs'].drug), 'inner').distinct()\
+        .toPandas().to_csv('result/final_result.csv', header=True, index=False)
+
+
+    
 
 
 
