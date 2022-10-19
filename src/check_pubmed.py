@@ -1,53 +1,51 @@
-from unittest import result
+from importlib.resources import path
+
+from pickle import TRUE
 import pyspark.sql.functions as F
 from common import init_spark
-import os
+from pathlib import Path
+import re
+from functools import reduce
 
 spark = init_spark("discover", driver_memory=4)
 
-#load data
-def load_original_data(
-    file_path
-    ):
-    return spark.read.csv(
-        file_path,
-        encoding='utf-8',
-        mode='FAILFAST',
-        header=True,
-        inferSchema=True
-    )
+
+def read_files(dict_pattern):
+    return {
+        key: spark.read.csv(
+            path=pattern,
+            encoding='utf-8',
+            mode='FAILFAST',
+            header=True,
+            inferSchema= True
+        )
+        for key, pattern in dict_pattern.items()
+    }       
 
 #lower case
-def lower_case(df, col):
-    return df.withColumn(col, F.lower(F.col(col)))
+def process_df(df_dict):
+    #df_drug lower case drug column
+    df_dict['drugs'] = df_dict['drugs'].withColumn('drug', F.lower(F.col('drug')))
 
+    #df_pubmed lower case title column
+    df_dict['pubmed'] = df_dict['pubmed'].withColumn('title', F.lower(F.col('title')))
 
-def join(from_df, to_df, condition, how='inner'):
-    return from_df.join(to_df, condition, how)
+    #clinical_trials lower case scientific_title column
+    df_dict['clinical_trials'] = df_dict['clinical_trials'].withColumn('scientific_title', F.lower(F.col('scientific_title')))
+    #-------------------------------------------------------------------------------------------------------------------#
+    
+    #add type col to pubmed and clinical dataframes
+    df_dict['pubmed'] = df_dict['pubmed'].withColumn('type', F.lit('pubmed'))
+    df_dict['clinical_trials'] = df_dict['clinical_trials'].withColumn('type', F.lit('clinic'))
 
-def rename_pubmed_columns(pubmed_df):
-    return pubmed_df.withColumnRenamed('title', 'title_pubmed')\
-            .withColumnRenamed('date', 'date_pubmed')\
-            .withColumnRenamed('journal', 'journal_pubmed')
+    df_dict['clinical_trials'] = df_dict['clinical_trials'].withColumnRenamed('scientific_title', 'title')
+    # concat df_pub_med and df_clinical_trials
+    pubmed_clinical_df = df_dict['pubmed'].union(df_dict['clinical_trials'])
+    #drop column id of pubmed_clinical df
+    pubmed_clinical_df = pubmed_clinical_df.drop('id')
 
- 
-def pubMedPipline(
-    drugs_path,
-    pubmed_path,
-    drug_col,
-    pubmed_col
-):
-
-    drugs_df = load_original_data(drugs_path)
-    pubmed_df = load_original_data(pubmed_path)
-    drugs_df = lower_case(drugs_df, drug_col)
-    pubmed_df = lower_case(pubmed_df, pubmed_col)
-    pubmed_df = rename_pubmed_columns(pubmed_df)
-
-    condition = pubmed_df.title_pubmed.contains(drugs_df.drug)
-    join(drugs_df, pubmed_df, condition).toPandas().to_csv('result/res.csv', sep=',', header=True, index=False)
-
-
+    #join pubmed_clinical_df with drugs df
+    return df_dict['drugs'].select('drug').join(pubmed_clinical_df, pubmed_clinical_df.title.contains(df_dict['drugs'].drug), 'inner').distinct()
 
 
 
