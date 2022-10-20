@@ -14,13 +14,14 @@ Pyspark pipline and SQL queries
 ![Employee data](images/output_result.png?raw=true "json file as tree")
 
 ## Prepare mysql in docker container to run queries
-1. `docker run -it --name test -e MYSQL_ROOT_PASSWORD=root -d mysql`
-2. `docker exec -it test bash`
-3. `mysql -p` PASSWORD is `root` Now we can execute queries on our instance
-4. Open new terminal in esmoz_servier directory
-5. Run `docker cp data/sql_data/. test://var/lib/mysql-files/`
-6. Run `docker cp tables.sql test://var/lib/mysql-files/`
-7. `source /var/lib/mysql-files//tables.sql` to execute script in queries.sql
+1. Open new terminal
+2. `docker run -it --name test -e MYSQL_ROOT_PASSWORD=root -d mysql`
+3. `docker exec -it test bash`
+4. `mysql -p` PASSWORD is `root` Now we can execute queries on our instance
+5. Open new terminal this time in esmoz_servier directory
+6. Run `docker cp data/sql_data/. test://var/lib/mysql-files/`
+7. Run `docker cp queries.sql test://var/lib/mysql-files/`
+8. in the terminal open at (1) `source /var/lib/mysql-files//queries.sql` to execute script in queries.sql 
 
 ## Run tests
 `pytest` tape this in the terminal
