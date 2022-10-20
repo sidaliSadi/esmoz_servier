@@ -29,7 +29,8 @@ Pyspark pipline and SQL queries
 │   └── sql_data                    data folder containing data to populate transaction table
     └── clinical_trials.csv         
     └── pubmed.csv
-    └── drugs.csv   
+    └── drugs.csv 
+└── images                          folder containing the preview image of the result  
 └── result                          data folder containing the output of the pipline 
 └── src
     ├── common
