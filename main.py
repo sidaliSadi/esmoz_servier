@@ -7,24 +7,25 @@ if __name__ == '__main__':
     root = Node('root')
     
     dict_pattern = {
-    'drugs': 'esmoz_servier/data/drugs.csv',
-    'pubmed': 'esmoz_servier/esmoz_servier/data/pubmed.csv',
-    'clinical_trials': 'esmoz_servier/esmoz_servier/data/clinical_trials.csv'
+    'drugs': './data/drugs.csv',
+    'pubmed': './data/pubmed.csv',
+    'clinical_trials': './data/clinical_trials.csv'
 }
 
     #read files
     print("reading files ..")
     dict_dfs = read_files(dict_pattern)
+    print(dict_dfs['drugs'].columns)
 
-    # apply 
-    print('processing the dataframes !!')
-    process_df(dict_dfs)
+    # # apply 
+    # print('processing the dataframes !!')
+    # process_df(dict_dfs)
 
-    print('saving result as json file ')
-    save_as_tree(root, 'result/final_result.csv')
+    # print('saving result as json file ')
+    # save_as_tree(root, 'result/final_result.csv')
 
 
-    print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
+    # print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
 
  
 
