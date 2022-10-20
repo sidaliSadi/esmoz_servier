@@ -8,6 +8,12 @@ spark = init_spark("discover", driver_memory=4)
 
 
 def read_files(dict_pattern):
+    """
+    Input:
+        dict_pattern: dictionary {'df_name': 'path to file'}
+    Output:
+        dictionary {'df_name': pyspark dataframe}
+    """
     return {
         key: spark.read.csv(
             path=pattern,
