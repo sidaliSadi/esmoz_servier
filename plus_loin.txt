@@ -1,0 +1,12 @@
+1- Supposons que les fichiers pubmed.csv, drugs.csv, clinical_trials.csv sont volumineux (plusieurs To),
+dans ce cas de figure une seule machine ne suffira pas donc je propose d'utiliser le service DataProc de GCP. puis 
+    * modifier la configuration de spark dans init_spark.py
+    * envoyer job pyspark
+    * accompagner le fichier main.py avec des fichiers supplimentaires : spark_pipline, graph.py, ad_hoc.py
+    * il faut envisager aussi de changer le path des inputs et les imports en fonction de leurs emplacement (GCS, HDFS ou local)
+    
+
+2- Maintenant si on a plusiers milliers de fichiers (j'ai supposé qu'il y a 3 familles pubmed, drugs et clinical_trials, dans chaque famille il y a des milliers de fichiers 
+    exemple pubmed_mois_annee.csv):
+    * Dans ce cas selon le pattern il faut modifier dict_pattern dans le fichier main.
+    * pour l'execution il faut suivre l'explication du point numero 1
