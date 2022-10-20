@@ -1,5 +1,4 @@
 
-from unittest import result
 from src.graph import Node
 from src.spark_pipline import read_files, process_df, save_as_tree
 from src.ad_hoc import newspaper_with_most_different_drugs
@@ -24,7 +23,7 @@ if __name__ == '__main__':
     print('saving result as json file ')
     save_as_tree(root, 'result/final_result.csv')
 
-    
+
     print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
 
  
