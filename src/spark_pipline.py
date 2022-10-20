@@ -26,6 +26,12 @@ def read_files(dict_pattern):
     }       
 
 def process_df(df_dict):
+    """
+        Input:
+            dictionary of dataframes {df_name: dataframe}
+        Output:
+        save the file as csv
+    """
     #df_drug lower case drug column
     df_dict['drugs'] = df_dict['drugs'].withColumn('drug', F.lower(F.col('drug')))
 
