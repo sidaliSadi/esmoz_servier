@@ -10,6 +10,8 @@ Pyspark pipline and SQL queries
 
 ## Run python pipline 
 1. `python main.py` This will run the entire pipline (read process files, save the result and print the ad_hoc also)
+### the json file resulted
+![Employee data](images/output_result.png?raw=true "json file as tree")
 
 ## Prepare mysql in docker container to run queries
 1. `docker run -it --name test -e MYSQL_ROOT_PASSWORD=root -d mysql`
