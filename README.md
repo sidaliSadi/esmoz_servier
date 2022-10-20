@@ -22,6 +22,10 @@ Pyspark pipline and SQL queries
 6. Run `docker cp tables.sql test://var/lib/mysql-files/`
 7. `source /var/lib/mysql-files//tables.sql` to execute script in queries.sql
 
+## Run tests
+`pytest` tape this in the terminal
+
+
 ### Code folder architecture
 ```
 .
