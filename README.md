@@ -42,5 +42,6 @@ Pyspark pipline and SQL queries
 
     ├── ad_hoc.py                  
     └── graph.py                   represent the output (csv) to tree (json)
-    └── spark_pipline.py           
+    └── spark_pipline.py     
+└── tests                          folder containing test files      
 ```
