@@ -15,17 +15,16 @@ if __name__ == '__main__':
     #read files
     print("reading files ..")
     dict_dfs = read_files(dict_pattern)
-    print(dict_dfs['drugs'].columns)
 
-    # # apply 
-    # print('processing the dataframes !!')
-    # process_df(dict_dfs)
+    # apply 
+    print('processing the dataframes !!')
+    process_df(dict_dfs)
 
-    # print('saving result as json file ')
-    # save_as_tree(root, 'result/final_result.csv')
+    print('saving result as json file ')
+    save_as_tree(root, 'result/final_result.csv')
 
 
-    # print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
+    print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
 
  
 
