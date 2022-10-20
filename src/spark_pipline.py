@@ -59,15 +59,22 @@ def process_df(df_dict):
 
 
 def save_as_tree(root, file_path):
-        with open(f'{file_path}', 'r') as f:
-            reader = csv.reader(f)
-            for rid, row in enumerate(reader):
-                if rid == 0:
-                    continue
-                drug, title, date,journal, type = row
-                root.child(drug,'drug', cdate=None).child(title, type, date)
-                root.child(drug, 'drug', cdate=None).child(journal, 'journal', date)
-                # root.child(drug).child(journal_pubmed)
-        with open('result/final_result.json', 'w') as f:
-            json.dump(root.as_dict(), f)
+    """
+    Input:
+        root : instance of Node represent the root of our tree representation
+        file_path: the file resulted by the pipline (final_result.csv)
+    Output:
+        Json file as tree
+    """
+    with open(f'{file_path}', 'r') as f:
+        reader = csv.reader(f)
+        for rid, row in enumerate(reader):
+            if rid == 0:
+                continue
+            drug, title, date,journal, type = row
+            root.child(drug,'drug', cdate=None).child(title, type, date)
+            root.child(drug, 'drug', cdate=None).child(journal, 'journal', date)
+            # root.child(drug).child(journal_pubmed)
+    with open('result/final_result.json', 'w') as f:
+        json.dump(root.as_dict(), f)
 
