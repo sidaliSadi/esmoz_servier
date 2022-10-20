@@ -12,14 +12,17 @@ if __name__ == '__main__':
     'clinical_trials': '/home/sadi/Bureau/esmoz_servier/esmoz_servier/data/clinical_trials.csv'
 }
 
-    # #read files
-    # print("reading files ..")
-    # dict_dfs = read_files(dict_pattern)
+    #read files
+    print("reading files ..")
+    dict_dfs = read_files(dict_pattern)
 
-    # # apply process
-    # process_df(dict_dfs)
+    # apply process
+    process_df(dict_dfs)
 
-    # root = Node('root')
-    # save_as_tree(root, 'result/final_result.csv')
+    root = Node('root')
+    save_as_tree(root, 'result/final_result.csv')
 
     print(f"Le journal avec le plus de medicaments differents est: {newspaper_with_most_different_drugs('result/final_result.json')}")
+
+ 
+
