@@ -2,6 +2,7 @@
 1- Supposons qu'on a des fichiers lourds:
     une seule machine ne suffit pas donc il faut envisager de basculer vers un cloud provider, pour ma part j'ai utilisé GCP.
     * J'ai crée un cluster DataProc (1 master et 4 workers)
+    * Un bucket GCS pour uploader les fichiers sources et stocker le resultat 
     * pour envoyer un job pyspark sur le cluster il faut les deux fichiers: main.py et spark_pipline.
     * Ce qu'il faut changer dans les deux fichiers:
         - main.py:
