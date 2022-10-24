@@ -2,7 +2,6 @@ from functools import reduce
 import pyspark.sql.functions as F
 from .common import init_spark
 import csv, json
-import os
 from pyspark.sql import DataFrame
 from functools import reduce
 

@@ -1,12 +1,57 @@
-1- Supposons que les fichiers pubmed.csv, drugs.csv, clinical_trials.csv sont volumineux (plusieurs To),
-dans ce cas de figure une seule machine ne suffira pas donc je propose d'utiliser le service DataProc de GCP. puis 
-    * modifier la configuration de spark dans init_spark.py
-    * envoyer job pyspark
-    * accompagner le fichier main.py avec des fichiers supplimentaires : spark_pipline, graph.py, ad_hoc.py
-    * il faut envisager aussi de changer le path des inputs et les imports en fonction de leurs emplacement (GCS, HDFS ou local)
-    
 
-2- Maintenant si on a plusiers milliers de fichiers (j'ai supposé qu'il y a 3 familles pubmed, drugs et clinical_trials, dans chaque famille il y a des milliers de fichiers 
-    exemple pubmed_mois_annee.csv):
-    * Dans ce cas selon le pattern il faut modifier dict_pattern dans le fichier main.
-    * pour l'execution il faut suivre l'explication du point numero 1
+1- Supposons qu'on a des fichiers lourds:
+    une seule machine ne suffit pas donc il faut envisager de basculer vers un cloud provider, pour ma part j'ai utilisé GCP.
+    * J'ai crée un cluster DataProc (1 master et 4 workers)
+    * pour envoyer un job pyspark sur le cluster il faut les deux fichiers: main.py et spark_pipline.
+    * Ce qu'il faut changer dans les deux fichiers:
+        - main.py:
+            from spark_pipline import read_files, process_df, newspaper_with_most_different_drugs
+
+            BUCKET_NAME = "pysparkjobs"
+            SRC_BUCKET = "gs://{}/data/".format(BUCKET_NAME)
+            DESTINATION_BUCKET = "gs://{}/result/".format(BUCKET_NAME)
+
+
+            #read files
+            print("reading files ..")
+            dict_dfs = read_files(SRC_BUCKET)
+
+            # apply
+            print("processing the dataframes and saving as csv!!")
+            process_df(dict_dfs, DESTINATION_BUCKET + "final_result.csv")
+
+            print("getting the newspaper with the most different drugs ...")
+            newspaper_with_most_different_drugs(DESTINATION_BUCKET + 'final_result.csv')
+
+
+        - spark_pipline.py:
+            remplacer l'initialisation de spark par dasn le fichier spark_pipline.py:
+
+                from pyspark.sql import SparkSession
+                spark = SparkSession.builder.appName("PySpark").getOrCreate()
+
+            Il faut enlever la fonction save_as_tree car ce n'est pas efficace de lire un csv de plusierus (To),
+            et la remplacer par ce bout de code. Chaque ligne du csv est sous la forme : drug,title,date,journal,type
+                        (type: pubmed ou bien clinical)
+
+            def  newspaper_with_most_different_drugs(file_path):
+                """
+                input:
+                    Le fichier resultant de notre pipline
+                output:
+                    un dataframe avec le journal qui a publié le plus de medicaments differents
+                """
+                df = spark.read.csv(file_path .....)
+                return df.dropDuplicates(["journal", "drug"])\
+                        .select('journal')\
+                        .groupBy('journal')\
+                        .count()\
+                        .orderBy(F.col('count').desc()).show(1)
+
+
+2- Pour aller encore plus loin:
+    si on veut que le pipline s'execute regulierement il faut créer une instance cloudComposer. Le DAG sera composé de 3 taches:
+
+    create cluster ==> submitJob ==> delete cluster
+
+    pour plus d'informations: https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataproc.html

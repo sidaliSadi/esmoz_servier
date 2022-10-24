@@ -2,9 +2,13 @@ from src.graph import Node
 from src.spark_pipline import read_files, process_df, save_as_tree
 from src.ad_hoc import newspaper_with_most_different_drugs
 
+import pyspark.sql.functions as F
+
+
 if __name__ == "__main__":
     SRC_DATA = "./data/"
     DEST_DATA = "./result/"
+
     root = Node("root")
 
     #     #read files
