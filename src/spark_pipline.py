@@ -45,12 +45,12 @@ def read_files(path_dir):
     return {key: reduce(DataFrame.unionByName, dfs) for key, dfs in res_dict.items()}
 
 
-def process_df(df_dict):
+def process_df(df_dict, output_file_path):
     """
     Input:
         dictionary of dataframes {df_name: dataframe}
     Output:
-    save the file as csv
+    save the processed dataframe as csv file
     """
     # df_drug lower case drug column
     df_dict["drugs"] = df_dict["drugs"].withColumn("drug", F.lower(F.col("drug")))
@@ -84,10 +84,12 @@ def process_df(df_dict):
         pubmed_clinical_df,
         pubmed_clinical_df.title.contains(df_dict["drugs"].drug),
         "inner",
-    ).distinct().toPandas().to_csv("result/final_result.csv", header=True, index=False)
+    ).distinct().toPandas().to_csv(
+        output_file_path + "final_result.csv", header=True, index=False
+    )
 
 
-def save_as_tree(root, file_path):
+def save_as_tree(root, file_path, output_file_path):
     """
     Input:
         root : instance of Node represent the root of our tree representation
@@ -103,6 +105,5 @@ def save_as_tree(root, file_path):
             drug, title, date, journal, type = row
             root.child(drug, "drug", cdate=None).child(title, type, date)
             root.child(drug, "drug", cdate=None).child(journal, "journal", date)
-            # root.child(drug).child(journal_pubmed)
-    with open("result/final_result.json", "w") as f:
+    with open(output_file_path + "final_result.json", "w") as f:
         json.dump(root.as_dict(), f)
