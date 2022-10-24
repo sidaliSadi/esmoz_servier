@@ -1,7 +1,7 @@
 # esmoz_servier 
 Pyspark pipline and SQL queries
 
-## Prepare envirenemnt
+## Prepare envirenemnt (java must be installed)
 1. Create virtual envirenement `python3 -m venv venv`
 2. Activate venv `source venv/bin/activate`
 3. Run `git clone https://github.com/sidaliSadi/esmoz_servier`
